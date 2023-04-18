@@ -181,6 +181,11 @@ tasks:
     cmds:
       - go vet ./...
 
+  go-generate:
+    desc: Generate GO docs and stuff
+    cmds:
+      - go generate ./...
+
   #############################################################################
   #
   # Custom options

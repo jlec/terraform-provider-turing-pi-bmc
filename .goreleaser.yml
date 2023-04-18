@@ -1,84 +1,63 @@
 ---
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
+# Visit https://goreleaser.com for documentation on how to customize this
+# behavior.
 before:
   hooks:
-    # You may remove this if you don't use go modules.
+    # this is just an example and not a requirement for provider building/publishing
     - go mod tidy
     # you may remove this if you don't need go generate
     - go generate ./...
 builds:
-  - binary: goer
+  - binary: "{{ .ProjectName }}_v{{ .Version }}"
     env:
+      # goreleaser does not work with CGO, it could also complicate
+      # usage by users in CI/CD systems like Terraform Cloud where
+      # they are unable to install libraries.
       - CGO_ENABLED=0
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      - "-s -w -X main.version={{.Version}} -X main.commit={{.Commit}}"
     goarch:
       - amd64
-      # - arm
+      - "386"
+      - arm
       - arm64
     goos:
+      - freebsd
+      - windows
       - linux
       - darwin
     ignore:
-      - goos: linux
-        goarch: arm64
+      - goos: darwin
+        goarch: "386"
 archives:
-  - format: binary
-    name_template: >-
-      {{ .ProjectName }}_
-      {{- if eq .Os "darwin" }}Darwin
-      {{- else if eq .Os "linux" }}Linux
-      {{- else if eq .Os "linux" }}Linux
-      {{- else }}{{ .Os }}{{ end }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else }}{{ .Arch }}{{ end }}
+  - format: zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 checksum:
-  name_template: "checksums.txt"
-snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  extra_files:
+    - glob: "terraform-registry-manifest.json"
+      name_template: "{{ .ProjectName }}_{{ .Version }}_manifest.json"
+  name_template: "{{ .ProjectName }}_{{ .Version }}_SHA256SUMS"
+  algorithm: sha256
+signs:
+  - artifacts: checksum
+    args:
+      # if you are using this in a GitHub action or some other automated pipeline, you
+      # need to pass the batch flag to indicate its not interactive.
+      - "--batch"
+      - "--local-user"
+      - "{{ .Env.GPG_FINGERPRINT }}" # set this environment variable for your signing key
+      - "--output"
+      - "${signature}"
+      - "--detach-sign"
+      - "${artifact}"
+release:
+  extra_files:
+    - glob: "terraform-registry-manifest.json"
+      name_template: "{{ .ProjectName }}_{{ .Version }}_manifest.json"
+  # If you want to manually examine the release before its live, uncomment this line:
+  # draft: true
 changelog:
-  sort: asc
-  filters:
-    exclude:
-      - "^docs:"
-      - "^test:"
-
-brews:
-  - # Name template of the recipe
-    # Default to project name
-    name: goer
-
-    # GitHub/GitLab repository to push the formula to
-    tap:
-      owner: jlec
-      name: homebrew-jlec
-
-      # Optionally a token can be provided, if it differs from the token
-      # provided to GoReleaser
-      # token: "{{ .Env.TAP_GITHUB_TOKEN }}"
-
-    # Allows you to set a custom download strategy. Note that you'll need
-    # to implement the strategy and add it to your tap repository.
-    # Example: https://docs.brew.sh/Formula-Cookbook#specifying-the-download-strategy-explicitly
-    # Default is empty.
-    download_strategy: GitHubPrivateRepositoryReleaseDownloadStrategy
-
-    # Allows you to add a custom require_relative at the top of the formula
-    # template.
-    # Default is empty
-    custom_require: ../custom_download_strategy/private
-
-    # Folder inside the repository to put the formula.
-    # Default is the root folder.
-    folder: Formula
-
-    # Your app's homepage.
-    # Default is empty.
-    homepage: "https://github.com/{{ .Env.GITHUB_REPOSITORY }}"
-
-    # Your app's description.
-    # Default is empty.
-    description: "TF provider for Turing PI BMC"
-
-    # SPDX identifier of your app's license.
-    # Default is empty.
-    license: "Apache-2.0"
+  skip: true
