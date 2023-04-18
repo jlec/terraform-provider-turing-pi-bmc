@@ -1,0 +1,33 @@
+---
+linters:
+  disable:
+    - gochecknoinits
+    - godox
+    - ifshort
+    - nosnakecase
+    - scopelint
+    # not sure how to fix things
+    - forbidigo
+  presets:
+    - bugs
+    - comment
+    - complexity
+    - error
+    - format
+    - import
+    - metalinter
+    - module
+    - performance
+    - sql
+    - style
+    - test
+    - unused
+  # Run only fast linters from enabled linters set (first run won't be fast)
+  # Default: false
+  fast: true
+linters-settings:
+  wsl:
+    # Allow blocks to end with comments.
+    allow-trailing-comment: true
+  lll:
+    line-length: 128

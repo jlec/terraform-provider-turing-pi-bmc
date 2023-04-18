@@ -1,0 +1,75 @@
+---
+name: Continuous Integration
+
+# yamllint disable-line rule:truthy
+on:
+  # yamllint disable-line rule:empty-values
+  workflow_dispatch:
+
+  # yamllint disable-line rule:empty-values
+  pull_request:
+
+  push:
+    branches:
+      - "*"
+    tags-ignore:
+      - "**"
+
+permissions: read-all
+
+jobs:
+  ##############################################################################
+  #
+  # Run on everything but Releases and WIP
+  #
+  ##############################################################################
+  linting:
+    if: >-
+      !startsWith(github.event.head_commit.message, 'bump:') &&
+      !startsWith(github.event.head_commit.message, 'WIP')
+    name: "Run Linting against all files"
+    uses: jlec/github-actions/.github/workflows/reusable-linting.yml@main
+  go-build-test:
+    name: "GO Build & Test"
+    if: >-
+      ${{ github.actor != 'dependabot[bot]' }} &&
+      !startsWith(github.event.head_commit.message, 'bump:') &&
+      !startsWith(github.event.head_commit.message, 'WIP')
+    needs:
+      - linting
+    uses: jlec/github-actions/.github/workflows/reusable-ci-go.yml@main
+    secrets:
+      pat: ${{ secrets.PAT_GITHUB_TOKEN }}
+
+  dependabot:
+    name: "Handle dependabot PR"
+    if: >-
+      ${{ github.actor == 'dependabot[bot]' }} &&
+      !startsWith(github.event.head_commit.message, 'bump:') &&
+      !startsWith(github.event.head_commit.message, 'WIP')
+    needs:
+      - linting
+    uses: jlec/github-actions/.github/workflows/reusable-pr-dependabot.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+
+  ci-generic:
+    name: "Run generic CI"
+    if: >-
+      ${{ github.actor != 'dependabot[bot]' }} &&
+      !startsWith(github.event.head_commit.message, 'bump:') &&
+      !startsWith(github.event.head_commit.message, 'WIP')
+    needs:
+      - go-build-test
+      - dependabot
+      - linting
+    uses: jlec/github-actions/.github/workflows/reusable-ci-generic.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+    secrets:
+      pat: ${{ secrets.PAT_GITHUB_TOKEN }}
+      token: ${{ secrets.GITHUB_TOKEN }}

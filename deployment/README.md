@@ -1,4 +1,4 @@
-# terraform_provider_turing_pi_bmc
+# Deployment code for terraform_provider_turing_pi_bmc
 
 TF provider for Turing PI BMC
 

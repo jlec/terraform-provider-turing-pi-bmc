@@ -1,0 +1,46 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 8
+    assignees:
+      - "jlec"
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 8
+    assignees:
+      - "jlec"
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    registries: "*"
+    open-pull-requests-limit: 8
+    assignees:
+      - "jlec"
+  - package-ecosystem: "terraform"
+    directory: "/deployment"
+    schedule:
+      interval: "weekly"
+    registries: "*"
+    open-pull-requests-limit: 8
+    assignees:
+      - "jlec"
+  - package-ecosystem: "terraform"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    registries: "*"
+    open-pull-requests-limit: 8
+    assignees:
+      - "jlec"
+registries:
+  terraform-jlec:
+    type: terraform-registry
+    url: https://app.terraform.io/
+    token: ${{ secrets.TFE_TOKEN_DEPENDABOT }}

@@ -1,0 +1,32 @@
+{
+  "template": "git@github.com:jlec/cookiecutter-general.git",
+  "commit": "149d69fa35e5dfcffd750c2f2c5fca9ba9b728eb",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "email": "justin@jlec.de",
+      "full_name": "Justin Lecher",
+      "github_owner": "jlec",
+      "github_repo": "terraform-provider-turing-pi-bmc",
+      "project_name": "TF provider for Turing PI BMC",
+      "project_short_description": "TF provider for Turing PI BMC",
+      "project_slug": "terraform_provider_turing_pi_bmc",
+      "project_support_ansible": false,
+      "project_support_ansible_collection": false,
+      "project_support_ansible_playbook": false,
+      "project_support_ansible_role": false,
+      "project_support_golang": true,
+      "project_support_nomad": false,
+      "project_support_packer": false,
+      "project_support_terraform": true,
+      "project_support_terraform_module": true,
+      "project_support_kubernetes": false,
+      "_copy_without_render": [
+        "charts/README.md.gotmpl"
+      ],
+      "_go_app_name": "goer",
+      "_template": "git@github.com:jlec/cookiecutter-general.git"
+    }
+  },
+  "directory": null
+}

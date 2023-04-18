@@ -1,0 +1,194 @@
+---
+version: "3"
+
+env:
+  GO_RUNNER: go
+  PY_PM: poetry
+  PY_RUNNER: poetry run
+  PYTESTARGS: -vvl --workers auto
+  BLACKARGS: --line-length 128 --check --diff
+
+tasks:
+  default:
+    cmds:
+      - task -l
+
+  #############################################################################
+  #
+  # Environment Setup
+  #
+  #############################################################################
+  setup:
+    desc: Setup environment
+    cmds:
+      - task: setup-python-env
+      - task: setup-pre-commit
+
+  setup-python-env:
+    desc: Setup Python environment
+    cmds:
+      - $PY_PM update
+
+  setup-pre-commit:
+    desc: Setup Pre-Commit environment
+    cmds:
+      - $PY_RUNNER pre-commit install
+      - $PY_RUNNER pre-commit install --install-hooks
+      - $PY_RUNNER pre-commit install --hook-type commit-msg
+      - $PY_RUNNER pre-commit install --hook-type pre-push
+      - task: ansible-init
+
+  ansible-init:
+    desc: Setup ansible
+    cmds:
+      - echo "No Ansible support"
+
+  #############################################################################
+  #
+  # Release management
+  #
+  #############################################################################
+  release:
+    desc: Release MINOR version bump
+    cmds:
+      - $PY_RUNNER cz bump --check-consistency --increment MINOR --no-verify
+
+  release-major:
+    desc: Release MAJOR version bump
+    cmds:
+      - $PY_RUNNER cz bump --check-consistency --increment MAJOR --no-verify
+
+  release-patch:
+    desc: Release PATCH version bump
+    cmds:
+      - $PY_RUNNER cz bump --check-consistency --increment PATCH --no-verify
+
+  publish:
+    desc: Push to remote
+    cmds:
+      - git push -v --progress
+      - git push -v --progress --tags
+
+  #############################################################################
+  #
+  # Cookies options
+  #
+  #############################################################################
+  cruft-update:
+    desc: Update the cookies
+    cmds:
+      - git stash push -m cruft-update
+      - $PY_RUNNER cruft update --allow-untracked-files --skip-apply-ask
+      - if test -d control; then pushd control >/dev/null && task init && popd; fi
+      - if test -d deployment; then pushd deployment >/dev/null && task init && popd; fi
+      - $PY_RUNNER pre-commit run -a pretty-format-json
+      - $PY_RUNNER pre-commit run -a terraform_docs
+      - git stash list | grep -q cruft-update && git stash pop >/dev/null || true
+
+  cruft-push:
+    desc: Push the cookies
+    cmds:
+      - 'git ci -a -m "chore(cruft): update to latest cruft state"'
+
+  cruft-reset:
+    desc: Reset cruft
+    cmds:
+      - cruft diff | git apply
+
+  #############################################################################
+  #
+  # Checking and Linting
+  #
+  #############################################################################
+  prettier:
+    desc: Run prettier
+    cmds:
+      - prettier -w .
+  check:
+    desc: Run pre-commit
+    deps:
+      - lint
+  lint:
+    desc: Run pre-commit
+    deps:
+      - linting
+  linting:
+    desc: Run pre-commit
+    deps:
+      - pre-commit
+
+  pre-commit:
+    desc: Run pre-commit
+    cmds:
+      - $PY_RUNNER pre-commit run --hook-stage commit --all-files
+      - $PY_RUNNER pre-commit run --hook-stage push --all-files
+      - $PY_RUNNER pre-commit run --hook-stage manual --all-files
+
+  test:
+    desc: Run pytest
+    deps:
+      - pytest
+
+  pytest:
+    desc: Run pytest
+    cmds:
+      - $PY_RUNNER pytest $PYTESTARGS tests
+  #############################################################################
+  #
+  # GOLANG options
+  #
+  #############################################################################
+  go-fmt:
+    desc: Runs gofumpt
+    sources:
+      - "./**/*.go"
+    cmds:
+      - gofumpt -l -w -extra .
+
+  go-install:
+    desc: Installs goer
+    sources:
+      - "./**/*.go"
+    cmds:
+      - $GO_RUNNER install -v -ldflags="-w -s -X main.version=\{\{.GIT_COMMIT\}\}" ./cmd/goer
+
+  go-lint:
+    desc: Runs golangci-lint
+    sources:
+      - "./**/*.go"
+    cmds:
+      - golangci-lint --verbose run
+      - staticcheck -f stylish ./...
+
+  go-mod:
+    desc: Downloads and tidy Go modules
+    cmds:
+      - go mod download -x
+      - go mod tidy -v
+
+  go-test:
+    desc: Runs gotest
+    cmds:
+      - grc -es --colour=on go test -v --bench=. --benchmem ./...
+
+  go-update:
+    desc: Update dependencies
+    cmds:
+      - go get -u ./...
+
+  go-vet:
+    desc: Vet go code
+    cmds:
+      - go vet ./...
+
+  #############################################################################
+  #
+  # Custom options
+  #
+  #############################################################################
+  clean:
+    desc: Clean up
+    cmds:
+      - rm -rf dist
+      - rm -rf tmp
+      - git clean -fdx

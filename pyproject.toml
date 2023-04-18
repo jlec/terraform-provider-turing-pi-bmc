@@ -1,0 +1,70 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.black]
+line-length = 128
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version = "0.0.0"
+version_files = [
+  "VERSION",
+  "pyproject.toml:version"
+]
+
+[tool.poetry]
+authors = ["Justin Lecher <justin@jlec.de>"]
+description = "TF provider for Turing PI BMC"
+license = "Apache-2.0"
+name = "terraform_provider_turing_pi_bmc"
+version = "0.0.0"
+
+[tool.poetry.dependencies]
+ansible = "^7.4.0"
+molecule = "^4.0.4"
+netaddr = "^0"
+pytest-testinfra = "^7.0.0"
+python = "^3.10"
+python-consul = "^1.1.0"
+
+[tool.poetry.extras]
+molecule = ["ansible", "docker", "lint"]
+pytest-testinfra = ["ansible", "docker", "local"]
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+commitizen = "^2.42.1"
+cruft = "^2.14.0"
+poetry = "^1.4.2"
+pre-commit = "^3.2.2"
+pytest = "^7.3.1"
+pytest-clarity = "^1.0.1"
+pytest-cookies = "^0"
+pytest-parallel = "^0"
+pytest-xdist = "^3.2.1"
+pyyaml = "^6.0"
+yamllint = "^1.30.0"
+
+[tool.ruff]
+exclude = [
+  "obsolete"
+]
+ignore = [
+  "B008", # do not perform function calls in argument defaults
+  "C901", # too complex
+  "E501" # line too long, handled by black
+]
+line-length = 128
+select = [
+  "B", # flake8-bugbear
+  # "I",  # isort
+  "C", # flake8-comprehensions
+  "E", # pycodestyle errors
+  "F", # pyflakes
+  "W" # pycodestyle warnings
+]
+
+[tool.ruff.per-file-ignores]

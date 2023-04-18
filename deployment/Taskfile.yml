@@ -1,0 +1,74 @@
+---
+version: "3"
+
+env:
+  PY_PM: poetry
+  PY_RUNNER: poetry run
+  # yamllint disable-line rule:empty-values
+  TF_AUTOAPPROVE:
+  # TF_AUTOAPPROVE: -auto-approve
+
+tasks:
+  default:
+    cmds:
+      - task -l
+
+  init:
+    desc: "Initialize deployment"
+    deps:
+      - task: terraform-init
+
+  ################################################################################
+  #
+  # Terraform
+  #
+  ################################################################################
+  terraform-init:
+    desc: "Initialize Terraform"
+    cmds:
+      - terraform init -upgrade
+
+  plan:
+    desc: "Plan the changes"
+    cmds:
+      - terraform plan
+
+  apply:
+    desc: "Apply Terraform changes"
+    cmds:
+      - terraform apply $TF_AUTOAPPROVE
+
+  output:
+    desc: "Show Terraform output"
+    cmds:
+      - terraform output
+
+  destroy:
+    desc: "Destroy Terraform state"
+    cmds:
+      - terraform destroy $TF_AUTOAPPROVE
+  ################################################################################
+  #
+  # Ansible
+  #
+  ################################################################################
+
+  ansible-init:
+    desc: "Initialize Ansible"
+    cmds:
+      - echo "No Ansible support"
+
+  ################################################################################
+  #
+  # Post deployment
+  #
+  ################################################################################
+  ssh:
+    desc: "SSH into the instance"
+    cmds:
+      - >
+          ssh
+          -l $(terraform output -json | jq -r '.ssh_user.value')
+          -i $(terraform output -json | jq -r '.ssh_key.value')
+          $(terraform output -json | jq -r '.IPv4.value[0]')
+    interactive: true

@@ -1,0 +1,73 @@
+---
+# Based on ansible-lint config
+extends: default
+
+ignore: ""
+
+yaml-files:
+  - ".yamllint"
+  - "*.yaml"
+  - "*.yml"
+
+rules:
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 1
+    level: error
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 1
+    level: error
+  colons:
+    max-spaces-before: 0
+    max-spaces-after: -1
+    level: error
+  commas:
+    max-spaces-before: 0
+    min-spaces-after: 1
+    max-spaces-after: -1
+  comments:
+    level: error
+    require-starting-space: true
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  document-end: disable
+  document-start:
+    level: error
+    present: true
+  empty-lines:
+    max: 1
+    max-start: 0
+    max-end: 0
+    level: error
+  empty-values:
+    forbid-in-block-mappings: true
+    forbid-in-flow-mappings: true
+  hyphens:
+    max-spaces-after: 1
+    level: error
+  indentation:
+    spaces: consistent
+    indent-sequences: true
+    check-multi-line-strings: false
+  key-duplicates: enable
+  key-ordering: disable
+  line-length:
+    max: 128
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: false
+  new-line-at-end-of-file: enable
+  new-lines:
+    type: unix
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
+  trailing-spaces: enable
+  truthy:
+    level: error
+    ignore: |
+      .yamllint
