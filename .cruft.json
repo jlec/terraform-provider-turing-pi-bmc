@@ -1,9 +1,13 @@
 {
-  "template": "git@github.com:jlec/cookiecutter-general.git",
-  "commit": "149d69fa35e5dfcffd750c2f2c5fca9ba9b728eb",
   "checkout": null,
+  "commit": "149d69fa35e5dfcffd750c2f2c5fca9ba9b728eb",
   "context": {
     "cookiecutter": {
+      "_copy_without_render": [
+        "charts/README.md.gotmpl"
+      ],
+      "_go_app_name": "goer",
+      "_template": "git@github.com:jlec/cookiecutter-general.git",
       "email": "justin@jlec.de",
       "full_name": "Justin Lecher",
       "github_owner": "jlec",
@@ -16,17 +20,13 @@
       "project_support_ansible_playbook": false,
       "project_support_ansible_role": false,
       "project_support_golang": true,
+      "project_support_kubernetes": false,
       "project_support_nomad": false,
       "project_support_packer": false,
       "project_support_terraform": true,
-      "project_support_terraform_module": true,
-      "project_support_kubernetes": false,
-      "_copy_without_render": [
-        "charts/README.md.gotmpl"
-      ],
-      "_go_app_name": "goer",
-      "_template": "git@github.com:jlec/cookiecutter-general.git"
+      "project_support_terraform_module": true
     }
   },
-  "directory": null
+  "directory": null,
+  "template": "git@github.com:jlec/cookiecutter-general.git"
 }
