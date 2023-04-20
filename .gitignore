@@ -342,3 +342,4 @@ nomad/nomad.rc
 # Custom rules
 #
 ###############################################################################
+terraform-provider-turing-pi-bmc

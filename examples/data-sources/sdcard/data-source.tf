@@ -1,3 +1,4 @@
+
 terraform {
   required_version = "~>1.4"
 
@@ -11,4 +12,11 @@ terraform {
 
 provider "turing-pi-bmc" {
   endpoint = "10.100.100.231"
+}
+
+data "turing-pi-bmc_sdcard" "example" {
+}
+
+output "sdcard" {
+  value = data.turing-pi-bmc_sdcard.example
 }

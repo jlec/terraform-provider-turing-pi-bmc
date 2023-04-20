@@ -89,6 +89,7 @@ repos:
         args:
           - --hook-config=--add-to-existing-file=true
       - id: terraform_providers_lock
+        exclude: "examples"
       - id: terraform_tflint
       - id: terraform_tfsec
         args:
