@@ -9,3 +9,14 @@ type SDCard struct {
 type SDCardResponse struct {
 	Response []SDCard `json:"response"`
 }
+
+type NodeInfo struct {
+	Node1 string `json:"node1"`
+	Node2 string `json:"node2"`
+	Node3 string `json:"node3"`
+	Node4 string `json:"node4"`
+}
+
+type NodeInfoResponse struct {
+	Response []NodeInfo `json:"response"`
+}

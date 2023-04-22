@@ -84,6 +84,7 @@ func (p *TuringPiBMCProvider) Resources(ctx context.Context) []func() resource.R
 func (p *TuringPiBMCProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewSDCardDataSource,
+		NewNodeInfoDataSource,
 	}
 }
 
