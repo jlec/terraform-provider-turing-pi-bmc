@@ -14,56 +14,47 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &sdCardDataSource{}
-	_ datasource.DataSourceWithConfigure = &sdCardDataSource{}
+	_ datasource.DataSource              = &usbDataSource{}
+	_ datasource.DataSourceWithConfigure = &usbDataSource{}
 )
 
-// func NewsdCardDataSource() datasource.DataSource {
-// 	return &sdCardDataSource{}
-// }
-
-// NewSDCardDataSource is a helper function to simplify the provider implementation.
-func NewSDCardDataSource() datasource.DataSource {
-	return &sdCardDataSource{}
+// NewUsbDataSource is a helper function to simplify the provider implementation.
+func NewUsbDataSource() datasource.DataSource {
+	return &usbDataSource{}
 }
 
-// sdCardDataSource defines the data source implementation.
-type sdCardDataSource struct {
+// usbDataSource defines the data source implementation.
+type usbDataSource struct {
 	client *turingpi.Client
 }
 
-// sdCardDataSourceModel describes the data source data model.
-type sdCardDataSourceModel struct {
-	ID    types.String `tfsdk:"id"`
-	Total types.Int64  `tfsdk:"total"`
-	Free  types.Int64  `tfsdk:"free"`
-	Use   types.Int64  `tfsdk:"use"`
+// usbDataSourceModel describes the data source data model.
+type usbDataSourceModel struct {
+	ID   types.String `tfsdk:"id"`
+	Mode types.Int64  `tfsdk:"mode"`
+	Node types.Int64  `tfsdk:"node"`
 }
 
-func (d *sdCardDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_sdcard"
+func (d *usbDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_usb"
 }
 
-func (d *sdCardDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *usbDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Turing PI SDCard Data Source",
+		MarkdownDescription: "Turing PI Usb Data Source",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Description: "ID",
 				Computed:    true,
 			},
-			"total": schema.Int64Attribute{
-				MarkdownDescription: "Total capacity of SDCard",
+			"mode": schema.Int64Attribute{
+				MarkdownDescription: "USB mode",
 				Computed:            true,
 			},
-			"free": schema.Int64Attribute{
-				MarkdownDescription: "Total capacity of SDCard",
-				Computed:            true,
-			},
-			"use": schema.Int64Attribute{
-				MarkdownDescription: "Total capacity of SDCard",
+			"node": schema.Int64Attribute{
+				MarkdownDescription: "Node using USB",
 				Computed:            true,
 			},
 		},
@@ -71,7 +62,7 @@ func (d *sdCardDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 }
 
 // FIXME: RO attribute.
-func (d *sdCardDataSource) Configure(
+func (d *usbDataSource) Configure(
 	ctx context.Context,
 	req datasource.ConfigureRequest,
 	resp *datasource.ConfigureResponse,
@@ -88,8 +79,8 @@ func (d *sdCardDataSource) Configure(
 	}
 }
 
-func (d *sdCardDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data sdCardDataSourceModel
+func (d *usbDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data usbDataSourceModel
 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -100,19 +91,18 @@ func (d *sdCardDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	sdCard, err := d.client.GetSDCard()
+	usb, err := d.client.GetUsb()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read sdcard data, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read usb data, got error: %s", err))
 
 		return
 	}
 
 	// For the purposes of this example code, hardcoding a response value to
 	// save into the Terraform state.
-	data.ID = types.StringValue("sdcard")
-	data.Total = types.Int64Value(sdCard.Total)
-	data.Free = types.Int64Value(sdCard.Free)
-	data.Use = types.Int64Value(sdCard.Use)
+	data.ID = types.StringValue("usb")
+	data.Mode = types.Int64Value(usb.Mode)
+	data.Node = types.Int64Value(usb.Node)
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log

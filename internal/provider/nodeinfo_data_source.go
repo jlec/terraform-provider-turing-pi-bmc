@@ -18,10 +18,6 @@ var (
 	_ datasource.DataSourceWithConfigure = &nodeInfoDataSource{}
 )
 
-func NewnodeInfoDataSource() datasource.DataSource {
-	return &nodeInfoDataSource{}
-}
-
 // NewNodeInfoDataSource is a helper function to simplify the provider implementation.
 func NewNodeInfoDataSource() datasource.DataSource {
 	return &nodeInfoDataSource{}

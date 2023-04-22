@@ -184,6 +184,7 @@ tasks:
   go-generate:
     desc: Generate GO docs and stuff
     cmds:
+      - go get github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
       - go generate ./...
 
   #############################################################################

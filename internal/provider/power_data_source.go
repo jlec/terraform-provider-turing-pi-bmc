@@ -14,56 +14,57 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &sdCardDataSource{}
-	_ datasource.DataSourceWithConfigure = &sdCardDataSource{}
+	_ datasource.DataSource              = &powerDataSource{}
+	_ datasource.DataSourceWithConfigure = &powerDataSource{}
 )
 
-// func NewsdCardDataSource() datasource.DataSource {
-// 	return &sdCardDataSource{}
-// }
-
-// NewSDCardDataSource is a helper function to simplify the provider implementation.
-func NewSDCardDataSource() datasource.DataSource {
-	return &sdCardDataSource{}
+// NewPowerDataSource is a helper function to simplify the provider implementation.
+func NewPowerDataSource() datasource.DataSource {
+	return &powerDataSource{}
 }
 
-// sdCardDataSource defines the data source implementation.
-type sdCardDataSource struct {
+// powerDataSource defines the data source implementation.
+type powerDataSource struct {
 	client *turingpi.Client
 }
 
-// sdCardDataSourceModel describes the data source data model.
-type sdCardDataSourceModel struct {
+// powerDataSourceModel describes the data source data model.
+type powerDataSourceModel struct {
 	ID    types.String `tfsdk:"id"`
-	Total types.Int64  `tfsdk:"total"`
-	Free  types.Int64  `tfsdk:"free"`
-	Use   types.Int64  `tfsdk:"use"`
+	Node1 types.Int64  `tfsdk:"node1"`
+	Node2 types.Int64  `tfsdk:"node2"`
+	Node3 types.Int64  `tfsdk:"node3"`
+	Node4 types.Int64  `tfsdk:"node4"`
 }
 
-func (d *sdCardDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_sdcard"
+func (d *powerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_power"
 }
 
-func (d *sdCardDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *powerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Turing PI SDCard Data Source",
+		MarkdownDescription: "Turing PI Power Data Source",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Description: "ID",
 				Computed:    true,
 			},
-			"total": schema.Int64Attribute{
-				MarkdownDescription: "Total capacity of SDCard",
+			"node1": schema.Int64Attribute{
+				MarkdownDescription: "Power state of Node 1",
 				Computed:            true,
 			},
-			"free": schema.Int64Attribute{
-				MarkdownDescription: "Total capacity of SDCard",
+			"node2": schema.Int64Attribute{
+				MarkdownDescription: "Power state of Node 2",
 				Computed:            true,
 			},
-			"use": schema.Int64Attribute{
-				MarkdownDescription: "Total capacity of SDCard",
+			"node3": schema.Int64Attribute{
+				MarkdownDescription: "Power state of Node 3",
+				Computed:            true,
+			},
+			"node4": schema.Int64Attribute{
+				MarkdownDescription: "Power state of Node 4",
 				Computed:            true,
 			},
 		},
@@ -71,7 +72,7 @@ func (d *sdCardDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 }
 
 // FIXME: RO attribute.
-func (d *sdCardDataSource) Configure(
+func (d *powerDataSource) Configure(
 	ctx context.Context,
 	req datasource.ConfigureRequest,
 	resp *datasource.ConfigureResponse,
@@ -88,8 +89,8 @@ func (d *sdCardDataSource) Configure(
 	}
 }
 
-func (d *sdCardDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data sdCardDataSourceModel
+func (d *powerDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data powerDataSourceModel
 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -100,19 +101,20 @@ func (d *sdCardDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	sdCard, err := d.client.GetSDCard()
+	power, err := d.client.GetPower()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read sdcard data, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read power data, got error: %s", err))
 
 		return
 	}
 
 	// For the purposes of this example code, hardcoding a response value to
 	// save into the Terraform state.
-	data.ID = types.StringValue("sdcard")
-	data.Total = types.Int64Value(sdCard.Total)
-	data.Free = types.Int64Value(sdCard.Free)
-	data.Use = types.Int64Value(sdCard.Use)
+	data.ID = types.StringValue("power")
+	data.Node1 = types.Int64Value(power.Node1)
+	data.Node2 = types.Int64Value(power.Node2)
+	data.Node3 = types.Int64Value(power.Node3)
+	data.Node4 = types.Int64Value(power.Node4)
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log

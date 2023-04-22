@@ -31,3 +31,8 @@ linters-settings:
     allow-trailing-comment: true
   lll:
     line-length: 128
+issues:
+  exclude-rules:
+    - path: 'internal/provider'
+      linters:
+        - dupl
