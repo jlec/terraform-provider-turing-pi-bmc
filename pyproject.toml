@@ -9,7 +9,7 @@ line-length = 128
 name = "cz_conventional_commits"
 tag_format = "v$version"
 update_changelog_on_bump = true
-version = "0.0.1"
+version = "0.0.2"
 version_files = [
   "VERSION",
   "pyproject.toml:version"
@@ -20,7 +20,7 @@ authors = ["Justin Lecher <justin@jlec.de>"]
 description = "TF provider for Turing PI BMC"
 license = "Apache-2.0"
 name = "terraform_provider_turing_pi_bmc"
-version = "0.0.1"
+version = "0.0.2"
 
 [tool.poetry.dependencies]
 ansible = "^7.4.0"
