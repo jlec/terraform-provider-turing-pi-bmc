@@ -1,3 +1,9 @@
+## v0.0.3 (2023-04-23)
+
+### Feat
+
+- Add resource for USB interface
+
 ## v0.0.2 (2023-04-22)
 
 ### Feat
