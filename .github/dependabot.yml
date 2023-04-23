@@ -31,14 +31,6 @@ updates:
     open-pull-requests-limit: 8
     assignees:
       - "jlec"
-  - package-ecosystem: "terraform"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    registries: "*"
-    open-pull-requests-limit: 8
-    assignees:
-      - "jlec"
 registries:
   terraform-jlec:
     type: terraform-registry

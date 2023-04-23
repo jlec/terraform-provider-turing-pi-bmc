@@ -24,7 +24,7 @@
       "project_support_nomad": false,
       "project_support_packer": false,
       "project_support_terraform": true,
-      "project_support_terraform_module": true
+      "project_support_terraform_module": false
     }
   },
   "directory": null,

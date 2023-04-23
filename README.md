@@ -2,8 +2,6 @@
 
 TF provider for Turing PI BMC
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## License
 

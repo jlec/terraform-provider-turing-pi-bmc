@@ -7,14 +7,4 @@ terraform {
       name = "terraform_provider_turing_pi_bmc"
     }
   }
-  required_providers {
-    tfe = {
-      source  = "hashicorp/tfe"
-      version = "~>0.40"
-    }
-  }
-}
-provider "tfe" {
-  # Configuration options
-  token = var.tfe_token
 }
