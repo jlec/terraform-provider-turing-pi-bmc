@@ -1,7 +1,4 @@
-
 terraform {
-  required_version = "~>1.4"
-
   required_providers {
     turing-pi-bmc = {
       source  = "jlec.de/dev/turing-pi-bmc"
@@ -14,9 +11,7 @@ provider "turing-pi-bmc" {
   endpoint = "turingpi"
 }
 
-data "turing-pi-bmc_usb" "example" {
-}
-
-output "usb" {
-  value = data.turing-pi-bmc_usb.example
+resource "turing-pi-bmc_usb" "example" {
+  node = 4
+  mode = 0
 }

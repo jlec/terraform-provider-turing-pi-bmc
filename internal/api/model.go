@@ -40,3 +40,11 @@ type Usb struct {
 type UsbResponse struct {
 	Response []Usb `json:"response"`
 }
+
+type Result struct {
+	Result string `json:"result"`
+}
+
+type ResultResponse struct {
+	Response []Result `json:"response"`
+}

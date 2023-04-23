@@ -14,7 +14,7 @@ terraform {
 	}
 }
 provider "turing-pi-bmc" {
-	endpoint = "10.100.100.231"
+	endpoint = "turingpi"
 }
 `
 )

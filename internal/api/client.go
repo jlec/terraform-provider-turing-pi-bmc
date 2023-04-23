@@ -43,3 +43,31 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 
 	return body, err
 }
+
+func (c *Client) Get(params string) ([]byte, error) {
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", c.ApiURI, params), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := c.doRequest(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
+
+func (c *Client) Set(params string) ([]byte, error) {
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s?%s", c.ApiURI, params), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := c.doRequest(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}

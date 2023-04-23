@@ -3,27 +3,42 @@ package turingpi
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 )
 
 // GetUsb - Returns Turing Pi BMC SD card status.
 func (c *Client) GetUsb() (Usb, error) {
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?opt=get&type=usb", c.ApiURI), nil)
+	response := UsbResponse{}
+
+	body, err := c.Get("opt=get&type=usb")
 	if err != nil {
 		return Usb{}, err
 	}
 
-	body, err := c.doRequest(req)
+	err = json.Unmarshal(body, &response)
 	if err != nil {
 		return Usb{}, err
 	}
 
-	sdCardResponse := UsbResponse{}
-	err = json.Unmarshal(body, &sdCardResponse)
+	return response.Response[0], nil
+}
 
+// SetUsb - Returns Turing Pi BMC SD card status.
+func (c *Client) SetUsb(mode, node int64) (Result, error) {
+	response := ResultResponse{}
+
+	body, err := c.Set(fmt.Sprintf("opt=set&type=usb&mode=%d&node=%d", mode, node))
 	if err != nil {
-		return Usb{}, err
+		return Result{}, err
 	}
 
-	return sdCardResponse.Response[0], nil
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return Result{}, err
+	}
+
+	if response.Response[0].Result != "ok" {
+		return response.Response[0], &ResultError{Reason: response.Response[0].Result}
+	}
+
+	return response.Response[0], nil
 }
