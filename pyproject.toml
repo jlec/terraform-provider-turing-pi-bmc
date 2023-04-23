@@ -24,7 +24,7 @@ version = "0.0.3"
 
 [tool.poetry.dependencies]
 ansible = "^7.4.0"
-molecule = "^4.0.4"
+molecule = "^5.0.0"
 netaddr = "^0"
 pytest-testinfra = "^7.0.0"
 python = "^3.10"
