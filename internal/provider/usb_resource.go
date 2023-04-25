@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -47,25 +48,23 @@ func (r *usbResource) Metadata(ctx context.Context, req resource.MetadataRequest
 func (r *usbResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Turing PI Usb Resource",
+		MarkdownDescription: "Interface to the USB CM4 port in the Turing PI 2 board. It allows switching between the host " +
+			"and device mode as well as mapping to one of the 4 nodes.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "Identifier",
-				// PlanModifiers: []planmodifier.String{
-				// 	stringplanmodifier.UseStateForUnknown(),
-				// },
+				MarkdownDescription: "Unique identifier for this resource",
 			},
-			"mode": schema.Int64Attribute{
-				MarkdownDescription: "USB mode",
+			"mode": schema.StringAttribute{
+				MarkdownDescription: "USB port mode ('host' or 'device')",
 				Required:            true,
-				Validators: []validator.Int64{
-					int64validator.OneOf(0, 1),
+				Validators: []validator.String{
+					stringvalidator.OneOf("host", "device"),
 				},
 			},
 			"node": schema.Int64Attribute{
-				MarkdownDescription: "Node using USB",
+				MarkdownDescription: "Node which USB port is mapped to",
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, NodeCount),
@@ -99,7 +98,14 @@ func (r *usbResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	_, err := r.client.SetUsb(plan.Mode.ValueInt64(), plan.Node.ValueInt64())
+	mode, err := turingpi.ModeToApi(plan.Mode.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Api Error", fmt.Sprintf("Unable to convert API response, got error: %s", err))
+
+		return
+	}
+
+	_, err = r.client.SetUsb(mode, plan.Node.ValueInt64())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read usb data, got error: %s", err))
 
@@ -107,7 +113,7 @@ func (r *usbResource) Create(ctx context.Context, req resource.CreateRequest, re
 	}
 
 	plan.ID = types.StringValue("usb")
-	plan.Mode = types.Int64Value(plan.Mode.ValueInt64())
+	plan.Mode = types.StringValue(plan.Mode.ValueString())
 	plan.Node = types.Int64Value(plan.Node.ValueInt64())
 
 	// Write logs using the tflog package
@@ -136,8 +142,15 @@ func (r *usbResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
+	mode, err := turingpi.ApiToMode(usb.Mode)
+	if err != nil {
+		resp.Diagnostics.AddError("Api Error", fmt.Sprintf("Unable to convert API response, got error: %s", err))
+
+		return
+	}
+
 	plan.ID = types.StringValue("usb")
-	plan.Mode = types.Int64Value(usb.Mode)
+	plan.Mode = types.StringValue(mode)
 	plan.Node = types.Int64Value(usb.Node)
 
 	// Write logs using the tflog package
@@ -158,7 +171,14 @@ func (r *usbResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		return
 	}
 
-	_, err := r.client.SetUsb(plan.Mode.ValueInt64(), plan.Node.ValueInt64())
+	mode, err := turingpi.ModeToApi(plan.Mode.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Api Error", fmt.Sprintf("Unable to convert API response, got error: %s", err))
+
+		return
+	}
+
+	_, err = r.client.SetUsb(mode, plan.Node.ValueInt64())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set usb data, got error: %s", err))
 
@@ -172,8 +192,15 @@ func (r *usbResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		return
 	}
 
+	modeAPi, err := turingpi.ApiToMode(usb.Mode)
+	if err != nil {
+		resp.Diagnostics.AddError("Api Error", fmt.Sprintf("Unable to convert API response, got error: %s", err))
+
+		return
+	}
+
 	plan.ID = types.StringValue("usb")
-	plan.Mode = types.Int64Value(usb.Mode)
+	plan.Mode = types.StringValue(modeAPi)
 	plan.Node = types.Int64Value(usb.Node)
 
 	// Save updated data into Terraform state

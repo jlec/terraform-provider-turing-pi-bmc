@@ -31,7 +31,7 @@ type usbDataSource struct {
 // usbDataSourceModel describes the data source data model.
 type usbDataSourceModel struct {
 	ID   types.String `tfsdk:"id"`
-	Mode types.Int64  `tfsdk:"mode"`
+	Mode types.String `tfsdk:"mode"`
 	Node types.Int64  `tfsdk:"node"`
 }
 
@@ -49,7 +49,7 @@ func (d *usbDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Description: "ID",
 				Computed:    true,
 			},
-			"mode": schema.Int64Attribute{
+			"mode": schema.StringAttribute{
 				MarkdownDescription: "USB mode",
 				Computed:            true,
 			},
@@ -100,8 +100,15 @@ func (d *usbDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 
 	// For the purposes of this example code, hardcoding a response value to
 	// save into the Terraform state.
+	mode, err := turingpi.ApiToMode(usb.Mode)
+	if err != nil {
+		resp.Diagnostics.AddError("Api Error", fmt.Sprintf("Unable to convert API response, got error: %s", err))
+
+		return
+	}
+
 	data.ID = types.StringValue("usb")
-	data.Mode = types.Int64Value(usb.Mode)
+	data.Mode = types.StringValue(mode)
 	data.Node = types.Int64Value(usb.Node)
 
 	// Write logs using the tflog package

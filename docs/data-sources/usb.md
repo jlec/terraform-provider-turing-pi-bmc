@@ -18,5 +18,5 @@ Turing PI Usb Data Source
 ### Read-Only
 
 - `id` (String) ID
-- `mode` (Number) USB mode
+- `mode` (String) USB mode
 - `node` (Number) Node using USB

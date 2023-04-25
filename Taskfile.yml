@@ -186,6 +186,12 @@ tasks:
     cmds:
       - go get github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
       - go generate ./...
+      - cmd: pre-commit run -a end-of-file-fixer
+        ignore_error: true
+      - cmd: pre-commit run -a trailing-whitespace
+        ignore_error: true
+      - cmd: pre-commit run -a terraform_docs
+        ignore_error: true
 
   #############################################################################
   #
