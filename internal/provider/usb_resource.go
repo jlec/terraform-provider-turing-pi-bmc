@@ -105,7 +105,7 @@ func (r *usbResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	_, err = r.client.SetUsb(mode, plan.Node.ValueInt64())
+	_, err = r.client.SetUsb(mode, plan.Node.ValueInt64()-1)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read usb data, got error: %s", err))
 
@@ -151,7 +151,7 @@ func (r *usbResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 	plan.ID = types.StringValue("usb")
 	plan.Mode = types.StringValue(mode)
-	plan.Node = types.Int64Value(usb.Node)
+	plan.Node = types.Int64Value(usb.Node + 1)
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
@@ -178,7 +178,7 @@ func (r *usbResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		return
 	}
 
-	_, err = r.client.SetUsb(mode, plan.Node.ValueInt64())
+	_, err = r.client.SetUsb(mode, plan.Node.ValueInt64()-1)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set usb data, got error: %s", err))
 
@@ -201,7 +201,7 @@ func (r *usbResource) Update(ctx context.Context, req resource.UpdateRequest, re
 
 	plan.ID = types.StringValue("usb")
 	plan.Mode = types.StringValue(modeAPi)
-	plan.Node = types.Int64Value(usb.Node)
+	plan.Node = types.Int64Value(usb.Node + 1)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)

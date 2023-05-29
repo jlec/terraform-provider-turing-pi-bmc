@@ -14,6 +14,6 @@ provider "turing-pi-bmc" {
 }
 
 resource "turing-pi-bmc_usb" "example" {
-  node = 4
-  mode = 0
+  node = 1
+  mode = "host"
 }

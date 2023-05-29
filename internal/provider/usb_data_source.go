@@ -109,7 +109,7 @@ func (d *usbDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 
 	data.ID = types.StringValue("usb")
 	data.Mode = types.StringValue(mode)
-	data.Node = types.Int64Value(usb.Node)
+	data.Node = types.Int64Value(usb.Node + 1)
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log

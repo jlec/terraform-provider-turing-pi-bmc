@@ -13,7 +13,8 @@ version = "0.0.4"
 version_files = [
   "Taskfile.yml:TF_VERSION",
   "VERSION",
-  "pyproject.toml:version"
+  "pyproject.toml:version",
+  "Taskfile.yml:TF_VERSION"
 ]
 
 [tool.poetry]

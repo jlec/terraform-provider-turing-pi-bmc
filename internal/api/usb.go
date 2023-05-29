@@ -58,7 +58,7 @@ func ModeToApi(mode string) (int64, error) {
 	switch mode {
 	case "host":
 		return 0, nil
-	case "node":
+	case "device":
 		return 1, nil
 	default:
 		return -1, fmt.Errorf("'%s' not a valid mode", mode)

@@ -9,7 +9,22 @@ require (
 	github.com/hashicorp/terraform-plugin-testing v1.2.0
 )
 
-require google.golang.org/genproto/googleapis/rpc v0.0.0-20230526203410-71b5a4ffd15e // indirect
+require (
+	github.com/Masterminds/goutils v1.1.1 // indirect
+	github.com/Masterminds/semver/v3 v3.1.1 // indirect
+	github.com/Masterminds/sprig/v3 v3.2.2 // indirect
+	github.com/armon/go-radix v1.0.0 // indirect
+	github.com/bgentry/speakeasy v0.1.0 // indirect
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/hashicorp/terraform-plugin-docs v0.14.1 // indirect
+	github.com/huandu/xstrings v1.3.2 // indirect
+	github.com/mitchellh/cli v1.1.5 // indirect
+	github.com/posener/complete v1.2.3 // indirect
+	github.com/russross/blackfriday v1.6.0 // indirect
+	github.com/shopspring/decimal v1.3.1 // indirect
+	github.com/spf13/cast v1.5.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230526203410-71b5a4ffd15e // indirect
+)
 
 require (
 	github.com/agext/levenshtein v1.2.2 // indirect

@@ -2,7 +2,7 @@
 version: "3"
 
 env:
-  GO_DOCS_DEPS: ""
+  GO_DOCS_DEPS: github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
   GO_NAME: goer
   GO_RUNNER: go
   GOOS: darwin
@@ -12,7 +12,7 @@ env:
   PYTESTARGS: -vvl --workers auto
   BLACKARGS: --line-length 128 --check --diff
   TF_NAMESPACE: dev
-  TF_TYPE: gopass
+  TF_TYPE: turing-pi-bmc
   TF_VERSION: "0.1.2"
 
 tasks:
@@ -208,12 +208,12 @@ tasks:
   create-provider-dir:
     desc: Create Provider directory
     cmds:
-      - mkdir -p ~/.terraform.d/plugins/jlec.de/$TF_NAMESPACE/$TF_TYPE/$TF_VERSION/darwin_arm64
+      - mkdir -p ~/.terraform.d/plugins/jlec.de/$TF_NAMESPACE/${TF_TYPE}/${TF_VERSION}/darwin_arm64
 
   provider-build:
     desc: Build project
     cmds:
-      - go build -v -x -o ./terraform-provider-$TF_TYPE_$TF_VERSION_$GOOS_$GOARCH
+      - go build -v -x -o ./terraform-provider-${TF_TYPE}_${TF_VERSION}_$GOOS_$GOARCH
 
   provider-install:
     desc: Install Terraform provider dev version
@@ -223,8 +223,8 @@ tasks:
     cmds:
       - >-
         install -m 755
-        ./terraform-provider-$TF_TYPE_$TF_VERSION_$GOOS_$GOARCH
-        ~/.terraform.d/plugins/jlec.de/$TF_NAMESPACE/$TF_TYPE/$TF_VERSION/darwin_arm64/terraform-provider-$TF_TYPE_$TF_VERSION_$GOOS_$GOARCH
+        ./terraform-provider-${TF_TYPE}_${TF_VERSION}_$GOOS_$GOARCH
+        ~/.terraform.d/plugins/jlec.de/$TF_NAMESPACE/${TF_TYPE}/${TF_VERSION}/darwin_arm64/terraform-provider-${TF_TYPE}_${TF_VERSION}_$GOOS_$GOARCH
 
   #############################################################################
   #
