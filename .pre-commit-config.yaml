@@ -45,7 +45,7 @@ repos:
       - id: sort-simple-yaml
       - id: trailing-whitespace
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.30.0
+    rev: v1.31.0
     hooks:
       - id: yamllint
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
@@ -81,7 +81,7 @@ repos:
     hooks:
       - id: hadolint-docker
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.77.2
+    rev: v1.79.1
     hooks:
       # - id: infracost_breakdown
       - id: terraform_fmt
@@ -106,18 +106,18 @@ repos:
           - --args=--skip-rules="AC_AWS_0207"
         stages: ["push"]
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v2.42.1
+    rev: 3.2.2
     hooks:
       - id: commitizen
         stages:
           - commit-msg
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.261
+    rev: v0.0.269
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
   - repo: https://github.com/gitguardian/ggshield
-    rev: v1.14.5
+    rev: v1.15.1
     hooks:
       - id: ggshield
         stages: ["push"]
@@ -126,22 +126,34 @@ repos:
     hooks:
       - id: golangci-lint
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.8.0
+    rev: v2.9.0
     hooks:
       - id: pretty-format-golang
         args: [--autofix]
+  - repo: https://github.com/Bahjat/pre-commit-golang
+    rev: v1.0.2
+    hooks:
+      - id: go-fmt-import
+      - id: go-vet
+      - id: go-lint
+      - id: go-unit-tests
+      - id: gofumpt # requires github.com/mvdan/gofumpt
+      # - id: go-err-check # requires github.com/kisielk/errcheck
+      - id: go-static-check # install https://staticcheck.io/docs/
+      # - id: go-ruleguard # requires https://github.com/quasilyte/go-ruleguard
+      #   args: [rules/rules.go] # required
   - repo: https://github.com/pappasam/toml-sort
-    rev: v0.23.0
+    rev: v0.23.1
     hooks:
       - id: toml-sort
         args:
           - --in-place
           - --all
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.16.2
+    rev: v8.16.3
     hooks:
       - id: gitleaks
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.22.0
+    rev: 0.23.0
     hooks:
       - id: check-github-workflows

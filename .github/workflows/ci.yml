@@ -73,3 +73,19 @@ jobs:
     secrets:
       pat: ${{ secrets.PAT_GITHUB_TOKEN }}
       token: ${{ secrets.GITHUB_TOKEN }}
+
+  ci-release:
+    name: "Run Release CI"
+    if: >-
+      ${{ github.actor != 'dependabot[bot]' }} &&
+      !startsWith(github.event.head_commit.message, 'bump:') &&
+      !startsWith(github.event.head_commit.message, 'WIP')
+    needs:
+      - ci-generic
+    uses: jlec/github-actions/.github/workflows/reusable-ci-release.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+    secrets:
+      pat: ${{ secrets.PAT_GITHUB_TOKEN }}
+      token: ${{ secrets.GITHUB_TOKEN }}

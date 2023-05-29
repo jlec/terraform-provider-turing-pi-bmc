@@ -4,3 +4,4 @@ skip-check:
   - CKV_K8S_21 # Default Namespace
   - CKV_K8S_38 # Service Account token mount
   - CKV_K8S_43 # Image hash
+quiet: true
