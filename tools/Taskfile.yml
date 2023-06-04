@@ -1,0 +1,12 @@
+---
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task -l
+
+  release:
+    desc: Release provider on TF cloud
+    cmds:
+      - cmd: python release.py
