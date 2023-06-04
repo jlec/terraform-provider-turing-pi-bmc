@@ -8,6 +8,8 @@ linters:
     - scopelint
     # not sure how to fix things
     - forbidigo
+    # Crazy??
+    - depguard
   presets:
     - bugs
     - comment
