@@ -1,6 +1,6 @@
 {
   "checkout": null,
-  "commit": "d4f369cfa7e374d277746912ee3a01908c5a790d",
+  "commit": "57a17850e110ff32b9023a38dd2299ccc70182b1",
   "context": {
     "cookiecutter": {
       "_copy_without_render": [
@@ -25,7 +25,9 @@
       "project_support_packer": false,
       "project_support_terraform": true,
       "project_support_terraform_module": false,
-      "project_support_terraform_provider": true
+      "project_support_terraform_provider": true,
+      "project_support_terraform_terragrunt": false,
+      "tfe_org": "jlec-devops"
     }
   },
   "directory": null,

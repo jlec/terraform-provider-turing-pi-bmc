@@ -12,7 +12,6 @@ update_changelog_on_bump = true
 version = "0.0.4"
 version_files = [
   "Taskfile.yml:TF_VERSION",
-  "Taskfile.yml:TF_VERSION",
   "VERSION",
   "pyproject.toml:version"
 ]
@@ -25,7 +24,7 @@ name = "terraform_provider_turing_pi_bmc"
 version = "0.0.4"
 
 [tool.poetry.dependencies]
-ansible = "^7.5.0"
+ansible = "^8.0.0"
 molecule = "^5.0.1"
 netaddr = "^0"
 pytest-testinfra = "^8.1.0"
@@ -40,7 +39,7 @@ pytest-testinfra = ["ansible", "docker", "local"]
 black = "^23.3.0"
 commitizen = "^3.2.2"
 cruft = "^2.15.0"
-poetry = "^1.5.0"
+poetry = "^1.5.1"
 pre-commit = "^3.3.2"
 pytest = "^7.3.1"
 pytest-clarity = "^1.0.1"
@@ -48,7 +47,7 @@ pytest-cookies = "^0"
 pytest-parallel = "^0"
 pytest-xdist = "^3.3.1"
 pyyaml = "^6.0"
-yamllint = "^1.31.0"
+yamllint = "^1.32.0"
 
 [tool.ruff]
 exclude = [

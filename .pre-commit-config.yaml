@@ -44,8 +44,14 @@ repos:
       - id: requirements-txt-fixer
       - id: sort-simple-yaml
       - id: trailing-whitespace
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: 3.2.2
+    hooks:
+      - id: commitizen
+        stages:
+          - commit-msg
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.31.0
+    rev: v1.32.0
     hooks:
       - id: yamllint
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
@@ -80,49 +86,34 @@ repos:
     rev: v2.12.1-beta
     hooks:
       - id: hadolint-docker
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.79.1
+  - repo: https://github.com/pappasam/toml-sort
+    rev: v0.23.1
     hooks:
-      # - id: infracost_breakdown
-      - id: terraform_fmt
-      - id: terraform_docs
+      - id: toml-sort
         args:
-          - --hook-config=--add-to-existing-file=true
-      - id: terraform_providers_lock
-        exclude: "examples"
-      - id: terraform_tflint
-      - id: terraform_tfsec
-        args:
-          - --args=--exclude-downloaded-modules
-        stages: ["push"]
-      - id: terraform_checkov
-        args:
-          - --args=--config-file=.checkov.yaml
-        stages: ["push"]
-      - id: terrascan
-        args:
-          - --args=--verbose
-          - --args=--non-recursive
-          - --args=--skip-rules="AC_AWS_0207"
-        stages: ["push"]
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: 3.2.2
+          - --in-place
+          - --all
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.16.3
     hooks:
-      - id: commitizen
-        stages:
-          - commit-msg
+      - id: gitleaks
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.23.1
+    hooks:
+      - id: check-github-workflows
+
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.269
+    rev: v0.0.270
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
   - repo: https://github.com/gitguardian/ggshield
-    rev: v1.15.1
+    rev: v1.16.0
     hooks:
       - id: ggshield
         stages: ["push"]
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.52.2
+    rev: v1.53.2
     hooks:
       - id: golangci-lint
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
@@ -142,18 +133,35 @@ repos:
       - id: go-static-check # install https://staticcheck.io/docs/
       # - id: go-ruleguard # requires https://github.com/quasilyte/go-ruleguard
       #   args: [rules/rules.go] # required
-  - repo: https://github.com/pappasam/toml-sort
-    rev: v0.23.1
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.80.0
     hooks:
-      - id: toml-sort
+      # - id: infracost_breakdown
+      # - id: tfupdate
+      - id: terraform_fmt
+      - id: terraform_docs
         args:
-          - --in-place
-          - --all
-  - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.16.3
-    hooks:
-      - id: gitleaks
-  - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.23.0
-    hooks:
-      - id: check-github-workflows
+          - --hook-config=--add-to-existing-file=true
+      - id: terraform_validate
+      - id: terraform_providers_lock
+        args:
+          - --hook-config=--mode=always-regenerate-lockfile
+          - --args=-platform=darwin_arm64
+        stages: ["push"]
+      - id: terraform_tflint
+      - id: terraform_tfsec
+        args:
+          - --args=--exclude-downloaded-modules
+        stages: ["push"]
+      - id: terraform_checkov
+        args:
+          - --args=--config-file=.checkov.yaml
+        stages: ["push"]
+      # excluded until https://github.com/tenable/terrascan/issues/1390 is resolved
+      # - id: terrascan
+      #   args:
+      #     - --args=--iac-dir deployment
+      #     - --args=--non-recursive
+      #     - --args=--skip-rules="AC_AWS_0207"
+      #     - --args=--verbose
+      #   stages: ["push"]
