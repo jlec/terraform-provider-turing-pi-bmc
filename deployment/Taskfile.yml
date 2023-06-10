@@ -7,6 +7,7 @@ env:
   # yamllint disable-line rule:empty-values
   TF_AUTOAPPROVE:
   # TF_AUTOAPPROVE: -auto-approve
+  TERRAFORM_EXEC: terraform
 
 tasks:
   default:
@@ -26,27 +27,27 @@ tasks:
   terraform-init:
     desc: "Initialize Terraform"
     cmds:
-      - terraform init -upgrade
+      - ${TERRAFORM_EXEC} init -upgrade
 
   plan:
     desc: "Plan the changes"
     cmds:
-      - terraform plan
+      - ${TERRAFORM_EXEC} plan
 
   apply:
     desc: "Apply Terraform changes"
     cmds:
-      - terraform apply $TF_AUTOAPPROVE
+      - ${TERRAFORM_EXEC} apply $TF_AUTOAPPROVE
 
   output:
     desc: "Show Terraform output"
     cmds:
-      - terraform output
+      - ${TERRAFORM_EXEC} output
 
   destroy:
     desc: "Destroy Terraform state"
     cmds:
-      - terraform destroy $TF_AUTOAPPROVE
+      - ${TERRAFORM_EXEC} destroy $TF_AUTOAPPROVE
   ################################################################################
   #
   # Ansible
@@ -68,7 +69,7 @@ tasks:
     cmds:
       - >
           ssh
-          -l $(terraform output -json | jq -r '.ssh_user.value')
-          -i $(terraform output -json | jq -r '.ssh_key.value')
-          $(terraform output -json | jq -r '.IPv4.value[0]')
+          -l $(${TERRAFORM_EXEC} output -json | jq -r '.ssh_user.value')
+          -i $(${TERRAFORM_EXEC} output -json | jq -r '.ssh_key.value')
+          $(${TERRAFORM_EXEC} output -json | jq -r '.IPv4.value[0]')
     interactive: true
