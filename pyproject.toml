@@ -27,7 +27,7 @@ version = "0.0.4"
 ansible = "^8.0.0"
 molecule = "^5.0.1"
 netaddr = "^0"
-pytest-testinfra = "^8.1.0"
+pytest-testinfra = "^9.0.0"
 python = "^3.10"
 python-consul = "^1.1.0"
 
