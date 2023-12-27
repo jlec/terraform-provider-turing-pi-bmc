@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.4.0"
+  required_version = ">= 1.6.0"
   cloud {
     organization = "jlec-devops"
 

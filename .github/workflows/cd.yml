@@ -23,7 +23,7 @@ jobs:
       statuses: write
     secrets:
       pat: ${{ secrets.PAT_GITHUB_TOKEN }}
-      token: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
       tfe_release_token: ${{ secrets.TFE_RELEASE_KEY }}
       gpg_release_key: ${{ secrets.GPG_RELEASE_KEY }}
   release-and-clean:
@@ -38,7 +38,7 @@ jobs:
       - goreleaser
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ github.ref_name }}

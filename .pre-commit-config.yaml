@@ -4,11 +4,19 @@
 default_stages: [commit]
 exclude: >
   (?x)^(
+  .pytest_cache|
+  .ruff_cache|
+  .terraform|
+  .trunk/actions|
+  .trunk/logs|
+  .trunk/notifications|
+  .trunk/out|
+  .trunk/plugins|
   .vscode/launch.json
   )
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -18,8 +26,8 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-json
       - id: check-shebang-scripts-are-executable
-      - id: pretty-format-json
-        args: ["--autofix"]
+      # - id: pretty-format-json
+      #   args: ["--autofix"]
       - id: check-merge-conflict
       - id: check-symlinks
       - id: check-toml
@@ -29,6 +37,7 @@ repos:
       - id: debug-statements
       - id: destroyed-symlinks
       - id: detect-aws-credentials
+        args: ["--allow-missing-credentials"]
       - id: detect-private-key
       # - id: double-quote-string-fixer
       - id: end-of-file-fixer
@@ -45,17 +54,19 @@ repos:
       - id: sort-simple-yaml
       - id: trailing-whitespace
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: 3.2.2
+    rev: v3.13.0
     hooks:
       - id: commitizen
         stages:
           - commit-msg
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.32.0
+    rev: v1.33.0
     hooks:
       - id: yamllint
-  - repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: 3.0.0
+  # - repo: https://github.com/jumanjihouse/pre-commit-hooks
+  #   rev: 3.0.0
+  - repo: https://github.com/jlec/pre-commit-hooks
+    rev: gh-111
     hooks:
       # - id: bundler-audit
       - id: check-mailmap
@@ -74,9 +85,13 @@ repos:
       # - id: script-must-not-have-extension
       - id: shfmt
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.12.1
     hooks:
       - id: black
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
   - repo: https://github.com/jlec/pre-commit-cruft
     rev: v0.1.1
     hooks:
@@ -93,36 +108,37 @@ repos:
         args:
           - --in-place
           - --all
+          - --trailing-comma-inline-array
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.16.3
+    rev: v8.18.1
     hooks:
       - id: gitleaks
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.23.1
+    rev: 0.27.3
     hooks:
       - id: check-github-workflows
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.270
+    rev: v0.1.9
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
   - repo: https://github.com/gitguardian/ggshield
-    rev: v1.16.0
+    rev: v1.22.0
     hooks:
       - id: ggshield
         stages: ["push"]
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.53.2
+    rev: v1.55.2
     hooks:
       - id: golangci-lint
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.9.0
+    rev: v2.12.0
     hooks:
       - id: pretty-format-golang
         args: [--autofix]
   - repo: https://github.com/Bahjat/pre-commit-golang
-    rev: v1.0.2
+    rev: v1.0.3
     hooks:
       - id: go-fmt-import
       - id: go-vet
@@ -134,7 +150,7 @@ repos:
       # - id: go-ruleguard # requires https://github.com/quasilyte/go-ruleguard
       #   args: [rules/rules.go] # required
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.80.0
+    rev: v1.86.0
     hooks:
       # - id: infracost_breakdown
       # - id: tfupdate
@@ -149,9 +165,7 @@ repos:
           - --args=-platform=darwin_arm64
         stages: ["push"]
       - id: terraform_tflint
-      - id: terraform_tfsec
-        args:
-          - --args=--exclude-downloaded-modules
+      - id: terraform_trivy
         stages: ["push"]
       - id: terraform_checkov
         args:
@@ -165,3 +179,7 @@ repos:
       #     - --args=--skip-rules="AC_AWS_0207"
       #     - --args=--verbose
       #   stages: ["push"]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: "v4.0.0-alpha.8"
+    hooks:
+      - id: prettier

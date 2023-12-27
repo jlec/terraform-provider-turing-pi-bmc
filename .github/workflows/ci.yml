@@ -29,6 +29,8 @@ jobs:
       !startsWith(github.event.head_commit.message, 'WIP')
     name: "Run Linting against all files"
     uses: jlec/github-actions/.github/workflows/reusable-linting.yml@main
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
   go-build-test:
     name: "GO Build & Test"
     if: >-
@@ -43,6 +45,7 @@ jobs:
 
   dependabot:
     name: "Handle dependabot PR"
+    # trunk-ignore(actionlint/if-cond)
     if: >-
       ${{ github.actor == 'dependabot[bot]' }} &&
       !startsWith(github.event.head_commit.message, 'bump:') &&
@@ -54,10 +57,11 @@ jobs:
       contents: write
       pull-requests: write
     secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
 
   ci-generic:
     name: "Run generic CI"
+    # trunk-ignore(actionlint/if-cond)
     if: >-
       ${{ github.actor != 'dependabot[bot]' }} &&
       !startsWith(github.event.head_commit.message, 'bump:') &&
@@ -72,10 +76,11 @@ jobs:
       pull-requests: write
     secrets:
       pat: ${{ secrets.PAT_GITHUB_TOKEN }}
-      token: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
 
   ci-release:
     name: "Run Release CI"
+    # trunk-ignore(actionlint/if-cond)
     if: >-
       ${{ github.actor != 'dependabot[bot]' }} &&
       !startsWith(github.event.head_commit.message, 'bump:') &&
@@ -88,4 +93,4 @@ jobs:
       pull-requests: write
     secrets:
       pat: ${{ secrets.PAT_GITHUB_TOKEN }}
-      token: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}

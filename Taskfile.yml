@@ -1,4 +1,6 @@
 ---
+# https://taskfile.dev
+
 version: "3"
 
 env:
@@ -121,8 +123,9 @@ tasks:
       - linting
   linting:
     desc: Run pre-commit
-    deps:
-      - pre-commit
+    cmds:
+      - task: pre-commit
+      - task: trunk
 
   pre-commit:
     desc: Run pre-commit
@@ -130,6 +133,11 @@ tasks:
       - $PY_RUNNER pre-commit run --hook-stage commit --all-files
       - $PY_RUNNER pre-commit run --hook-stage push --all-files
       - $PY_RUNNER pre-commit run --hook-stage manual --all-files
+
+  trunk:
+    desc: Run trunk
+    cmds:
+      - cmd: trunk check --all --fix --exclude trivy
 
   test:
     desc: Run pytest

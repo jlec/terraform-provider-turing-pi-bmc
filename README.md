@@ -2,7 +2,6 @@
 
 TF provider for Turing PI BMC
 
-
 ## License
 
 Apache-2.0

@@ -3,6 +3,8 @@ import hashlib
 import os
 import sys
 
+from pathlib import Path
+
 import requests
 
 try:
@@ -124,8 +126,7 @@ class TFERelease:
 
         header["Accept"] = "application/octet-stream"
 
-        if not os.path.exists("releases"):
-            os.mkdir("releases")
+        Path("releases").mkdir(exist_ok=True)
 
         for asset in self.assets:
             url = asset["url"]
@@ -176,8 +177,7 @@ class TFERelease:
         )
         if r.status_code == 200:
             return r.json()
-        else:
-            return None
+        return None
 
     def create_provider_platform(self, os, arch, filename) -> dict:
         provider_platform = self.get_provider_platform(os, arch)
@@ -211,10 +211,10 @@ class TFERelease:
             split_filename = filename.split("_")
             if len(split_filename) < 4:
                 continue
-            os = split_filename[2]
+            o_s = split_filename[2]
             arch = split_filename[3].rstrip(".zip")
 
-            pp = self.create_provider_platform(os, arch, filename)
+            pp = self.create_provider_platform(o_s, arch, filename)
             # print_json(data=pp)
 
             if "provider-binary-upload" in pp["links"]:

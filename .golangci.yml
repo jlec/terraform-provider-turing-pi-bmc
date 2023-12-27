@@ -1,15 +1,19 @@
 ---
 linters:
   disable:
-    - gochecknoinits
-    - godox
+    # deprecated
     - ifshort
     - nosnakecase
     - scopelint
+    # We love TODOs
+    - godox
     # not sure how to fix things
     - forbidigo
-    # Crazy??
+    # Too crazy to use
     - depguard
+    - exhaustive
+    - exhaustruct
+    - gochecknoinits
   presets:
     - bugs
     - comment
@@ -26,15 +30,26 @@ linters:
     - unused
   # Run only fast linters from enabled linters set (first run won't be fast)
   # Default: false
-  fast: true
+  # fast: true
 linters-settings:
+  lll:
+    line-length: 128
+  varnamelen:
+    ignore-decls:
+      - c echo.Context
+      - const C
+      - e error
+      - i int
+      - m map[string]int
+      - ok bool
+      - s string
+      - T any
+      - t testing.T
   wsl:
     # Allow blocks to end with comments.
     allow-trailing-comment: true
-  lll:
-    line-length: 128
 issues:
   exclude-rules:
-    - path: 'internal/provider'
+    - path: "internal/provider"
       linters:
         - dupl

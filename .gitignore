@@ -344,3 +344,4 @@ nomad/nomad.rc
 ###############################################################################
 terraform-provider-turing-pi-bmc
 examples/**/.terraform.lock.hcl
+vendor

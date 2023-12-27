@@ -1,0 +1,104 @@
+---
+# This file controls the behavior of Trunk: https://docs.trunk.io/cli
+# To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
+actions:
+  disabled:
+    - trunk-check-pre-push
+    - trunk-single-player-auto-on-upgrade
+    - trunk-single-player-auto-upgrade
+  enabled:
+    - commitlint
+    - git-blame-ignore-revs
+    - git-lfs
+    - go-mod-tidy
+    - go-mod-tidy-vendor
+    - trunk-announce
+    - trunk-check-pre-commit
+    - trunk-fmt-pre-commit
+    - trunk-upgrade-available
+cli:
+  version: 1.18.1
+# This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
+lint:
+  disabled:
+    - codespell
+    - cspell
+    - remark-lint
+    - terrascan
+    - tfsec
+  enabled:
+    - actionlint@1.6.26
+    - ansible-lint@6.22.1
+    - bandit@1.7.6
+    - black@23.12.1
+    - checkov@3.1.44
+    - git-diff-check
+    - gitleaks@8.18.1
+    - gofmt@1.20.4
+    - gofumpt@0.5.0
+    - goimports@0.9.1
+    - gokart@0.5.1
+    - golangci-lint@1.55.2
+    - golines@0.11.0
+    - isort@5.13.2
+    - kube-linter@0.6.4
+    - markdownlint@0.38.0
+    - nancy@1.0.45
+    - osv-scanner@1.5.0
+    - pre-commit-hooks@4.5.0
+    - prettier@3.1.1
+    - ruff@0.1.9
+    - semgrep@1.54.3
+    - shellcheck@0.9.0
+    - shfmt@3.6.0
+    - taplo@0.8.1
+    - terraform@1.5.0
+    - terragrunt@0.54.12
+    - tflint@0.50.0
+    - trivy@0.48.1
+    - trufflehog-git@3.63.7
+    - trufflehog@3.63.7
+    - yamllint@1.33.0
+  ignore:
+    - linters: [ALL]
+      paths:
+        # Generated file
+        - CHANGELOG.md
+  linters:
+    - commands:
+        - enabled: true
+          name: validate
+      name: terraform
+  triggers:
+    - linters:
+        - ansible-lint
+      paths:
+        - common/ansible.cfg
+      targets:
+        - .
+    - linters:
+        - checkov
+      paths:
+        - deployment
+      targets:
+        - deployment
+# Trunk provides extensibility via plugins. (https://docs.trunk.io/plugins)
+plugins:
+  sources:
+    - id: trunk
+      ref: v1.4.1
+      uri: https://github.com/trunk-io/plugins
+# Many linters and tools depend on runtimes - configure them here. (https://docs.trunk.io/runtimes)
+runtimes:
+  enabled:
+    - go@>=1.21.0
+    - node@>=21.0.0
+    - python@>=3.12.0
+  definitions:
+    - system_version: allowed
+      type: go
+    - system_version: allowed
+      type: node
+    - system_version: allowed
+      type: python
+version: 0.1

@@ -13,7 +13,7 @@ version = "0.0.4"
 version_files = [
   "Taskfile.yml:TF_VERSION",
   "VERSION",
-  "pyproject.toml:version"
+  "pyproject.toml:version",
 ]
 
 [tool.poetry]
@@ -24,39 +24,36 @@ name = "terraform_provider_turing_pi_bmc"
 version = "0.0.4"
 
 [tool.poetry.dependencies]
-ansible = "^8.0.0"
-molecule = "^5.0.1"
+ansible = "^9.1.0"
+molecule = "^6.0.3"
 netaddr = "^0"
-pytest-testinfra = "^8.1.0"
-python = "^3.10"
-python-consul = "^1.1.0"
+pytest-testinfra = "^10.0.0"
+python = "~3.12"
 
 [tool.poetry.extras]
 molecule = ["ansible", "docker", "lint"]
 pytest-testinfra = ["ansible", "docker", "local"]
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
-commitizen = "^3.2.2"
+black = "^23.12.1"
+commitizen = "^3.13.0"
 cruft = "^2.15.0"
-poetry = "^1.5.1"
-pre-commit = "^3.3.2"
-pytest = "^7.3.1"
+poetry = "^1.7.1"
+pre-commit = "^3.6.0"
+pytest = "^7.4.3"
 pytest-clarity = "^1.0.1"
 pytest-cookies = "^0"
 pytest-parallel = "^0"
-pytest-xdist = "^3.3.1"
-pyyaml = "^6.0"
-yamllint = "^1.32.0"
+pytest-xdist = "^3.5.0"
+pyyaml = "^6.0.1"
+yamllint = "^1.33.0"
 
 [tool.ruff]
-exclude = [
-  "obsolete"
-]
+exclude = ["obsolete"]
 ignore = [
   "B008", # do not perform function calls in argument defaults
   "C901", # too complex
-  "E501" # line too long, handled by black
+  "E501", # line too long, handled by black
 ]
 line-length = 128
 select = [
@@ -65,7 +62,7 @@ select = [
   "C", # flake8-comprehensions
   "E", # pycodestyle errors
   "F", # pyflakes
-  "W" # pycodestyle warnings
+  "W", # pycodestyle warnings
 ]
 
 [tool.ruff.per-file-ignores]
