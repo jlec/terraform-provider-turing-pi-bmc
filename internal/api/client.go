@@ -1,6 +1,7 @@
 package turingpi
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,14 +13,14 @@ import (
 const TimeOut int = 10
 
 type Client struct {
-	ApiURI     string
+	APIURI     string
 	HTTPClient *http.Client
 }
 
 func NewClient(endpoint string) (*Client, error) {
 	c := Client{
 		HTTPClient: &http.Client{Timeout: time.Duration(TimeOut) * time.Second},
-		ApiURI:     fmt.Sprintf("http://%s/api/bmc", endpoint),
+		APIURI:     fmt.Sprintf("http://%s/api/bmc", endpoint),
 	}
 
 	return &c, nil
@@ -28,45 +29,55 @@ func NewClient(endpoint string) (*Client, error) {
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failure: %w", err)
 	}
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failure: %w", err)
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
+		return nil, fmt.Errorf("%w: '%d', body: %s", ErrInvalidStatus, res.StatusCode, body)
 	}
 
-	return body, err
+	return body, fmt.Errorf("failure: %w", err)
 }
 
-func (c *Client) Get(params string) ([]byte, error) {
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", c.ApiURI, params), nil)
+func (c *Client) Get(ctx context.Context, params string) ([]byte, error) {
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodGet,
+		fmt.Sprintf("%s?%s", c.APIURI, params),
+		nil,
+	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failure: %w", err)
 	}
 
 	body, err := c.doRequest(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failure: %w", err)
 	}
 
 	return body, nil
 }
 
-func (c *Client) Set(params string) ([]byte, error) {
-	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s?%s", c.ApiURI, params), nil)
+func (c *Client) Set(ctx context.Context, params string) ([]byte, error) {
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodPost,
+		fmt.Sprintf("%s?%s", c.APIURI, params),
+		nil,
+	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failure: %w", err)
 	}
 
 	body, err := c.doRequest(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failure: %w", err)
 	}
 
 	return body, nil

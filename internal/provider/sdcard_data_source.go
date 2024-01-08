@@ -23,7 +23,7 @@ var (
 // }
 
 // NewSDCardDataSource is a helper function to simplify the provider implementation.
-func NewSDCardDataSource() datasource.DataSource {
+func NewSDCardDataSource() datasource.DataSource { //nolint:ireturn
 	return &sdCardDataSource{}
 }
 
@@ -40,11 +40,19 @@ type sdCardDataSourceModel struct {
 	Use   types.Int64  `tfsdk:"use"`
 }
 
-func (d *sdCardDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *sdCardDataSource) Metadata(
+	_ context.Context,
+	req datasource.MetadataRequest,
+	resp *datasource.MetadataResponse,
+) {
 	resp.TypeName = req.ProviderTypeName + "_sdcard"
 }
 
-func (d *sdCardDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *sdCardDataSource) Schema(
+	_ context.Context,
+	_ datasource.SchemaRequest,
+	resp *datasource.SchemaResponse,
+) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Turing PI SDCard Data Source",
@@ -72,7 +80,7 @@ func (d *sdCardDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 
 // FIXME: RO attribute.
 func (d *sdCardDataSource) Configure(
-	ctx context.Context,
+	_ context.Context,
 	req datasource.ConfigureRequest,
 	resp *datasource.ConfigureResponse,
 ) {
@@ -88,7 +96,11 @@ func (d *sdCardDataSource) Configure(
 	}
 }
 
-func (d *sdCardDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *sdCardDataSource) Read(
+	ctx context.Context,
+	req datasource.ReadRequest,
+	resp *datasource.ReadResponse,
+) {
 	var data sdCardDataSourceModel
 
 	// Read Terraform configuration data into the model
@@ -100,9 +112,12 @@ func (d *sdCardDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	sdCard, err := d.client.GetSDCard()
+	sdCard, err := d.client.GetSDCard(ctx)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read sdcard data, got error: %s", err))
+		resp.Diagnostics.AddError(
+			"Client Error",
+			fmt.Sprintf("Unable to read sdcard data, got error: %s", err),
+		)
 
 		return
 	}

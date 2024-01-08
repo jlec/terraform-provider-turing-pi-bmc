@@ -29,12 +29,20 @@ type TuringPiBMCProviderModel struct {
 	Endpoint types.String `tfsdk:"endpoint"`
 }
 
-func (p *TuringPiBMCProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+func (p *TuringPiBMCProvider) Metadata(
+	_ context.Context,
+	_ provider.MetadataRequest,
+	resp *provider.MetadataResponse,
+) {
 	resp.TypeName = "turing-pi-bmc"
 	resp.Version = p.version
 }
 
-func (p *TuringPiBMCProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *TuringPiBMCProvider) Schema(
+	_ context.Context,
+	_ provider.SchemaRequest,
+	resp *provider.SchemaResponse,
+) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
@@ -45,7 +53,11 @@ func (p *TuringPiBMCProvider) Schema(ctx context.Context, req provider.SchemaReq
 	}
 }
 
-func (p *TuringPiBMCProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+func (p *TuringPiBMCProvider) Configure(
+	ctx context.Context,
+	req provider.ConfigureRequest,
+	resp *provider.ConfigureResponse,
+) {
 	var data TuringPiBMCProviderModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -66,7 +78,10 @@ func (p *TuringPiBMCProvider) Configure(ctx context.Context, req provider.Config
 	// Example client configuration for data sources and resources
 	client, err := turingpi.NewClient(data.Endpoint.ValueString())
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Something went wrong, got error: %s", err))
+		resp.Diagnostics.AddError(
+			"Client Error",
+			fmt.Sprintf("Something went wrong, got error: %s", err),
+		)
 
 		return
 	}
@@ -75,14 +90,14 @@ func (p *TuringPiBMCProvider) Configure(ctx context.Context, req provider.Config
 	resp.ResourceData = client
 }
 
-func (p *TuringPiBMCProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *TuringPiBMCProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		// NewSDCardDataSource,
 		NewUsbResource,
 	}
 }
 
-func (p *TuringPiBMCProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *TuringPiBMCProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewNodeInfoDataSource,
 		NewPowerDataSource,

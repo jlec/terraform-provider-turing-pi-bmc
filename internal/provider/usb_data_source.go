@@ -19,7 +19,7 @@ var (
 )
 
 // NewUsbDataSource is a helper function to simplify the provider implementation.
-func NewUsbDataSource() datasource.DataSource {
+func NewUsbDataSource() datasource.DataSource { //nolint:ireturn
 	return &usbDataSource{}
 }
 
@@ -35,11 +35,19 @@ type usbDataSourceModel struct {
 	Node types.Int64  `tfsdk:"node"`
 }
 
-func (d *usbDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *usbDataSource) Metadata(
+	_ context.Context,
+	req datasource.MetadataRequest,
+	resp *datasource.MetadataResponse,
+) {
 	resp.TypeName = req.ProviderTypeName + "_usb"
 }
 
-func (d *usbDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *usbDataSource) Schema(
+	_ context.Context,
+	_ datasource.SchemaRequest,
+	resp *datasource.SchemaResponse,
+) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Turing PI Usb Data Source",
@@ -63,7 +71,7 @@ func (d *usbDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 
 // FIXME: RO attribute.
 func (d *usbDataSource) Configure(
-	ctx context.Context,
+	_ context.Context,
 	req datasource.ConfigureRequest,
 	resp *datasource.ConfigureResponse,
 ) {
@@ -79,7 +87,11 @@ func (d *usbDataSource) Configure(
 	}
 }
 
-func (d *usbDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *usbDataSource) Read(
+	ctx context.Context,
+	req datasource.ReadRequest,
+	resp *datasource.ReadResponse,
+) {
 	var data usbDataSourceModel
 
 	// Read Terraform configuration data into the model
@@ -91,18 +103,24 @@ func (d *usbDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	usb, err := d.client.GetUsb()
+	usb, err := d.client.GetUsb(ctx)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read usb data, got error: %s", err))
+		resp.Diagnostics.AddError(
+			"Client Error",
+			fmt.Sprintf("Unable to read usb data, got error: %s", err),
+		)
 
 		return
 	}
 
 	// For the purposes of this example code, hardcoding a response value to
 	// save into the Terraform state.
-	mode, err := turingpi.ApiToMode(usb.Mode)
+	mode, err := turingpi.APIToMode(usb.Mode)
 	if err != nil {
-		resp.Diagnostics.AddError("Api Error", fmt.Sprintf("Unable to convert API response, got error: %s", err))
+		resp.Diagnostics.AddError(
+			"Api Error",
+			fmt.Sprintf("Unable to convert API response, got error: %s", err),
+		)
 
 		return
 	}

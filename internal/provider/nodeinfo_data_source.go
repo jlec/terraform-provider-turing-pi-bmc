@@ -19,7 +19,7 @@ var (
 )
 
 // NewNodeInfoDataSource is a helper function to simplify the provider implementation.
-func NewNodeInfoDataSource() datasource.DataSource {
+func NewNodeInfoDataSource() datasource.DataSource { //nolint:ireturn
 	return &nodeInfoDataSource{}
 }
 
@@ -37,11 +37,19 @@ type nodeInfoDataSourceModel struct {
 	Node4 types.String `tfsdk:"node4"`
 }
 
-func (d *nodeInfoDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *nodeInfoDataSource) Metadata(
+	_ context.Context,
+	req datasource.MetadataRequest,
+	resp *datasource.MetadataResponse,
+) {
 	resp.TypeName = req.ProviderTypeName + "_nodeinfo"
 }
 
-func (d *nodeInfoDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *nodeInfoDataSource) Schema(
+	_ context.Context,
+	_ datasource.SchemaRequest,
+	resp *datasource.SchemaResponse,
+) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Turing PI NodeInfo Data Source",
@@ -73,7 +81,7 @@ func (d *nodeInfoDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 
 // FIXME: RO attribute.
 func (d *nodeInfoDataSource) Configure(
-	ctx context.Context,
+	_ context.Context,
 	req datasource.ConfigureRequest,
 	resp *datasource.ConfigureResponse,
 ) {
@@ -89,7 +97,11 @@ func (d *nodeInfoDataSource) Configure(
 	}
 }
 
-func (d *nodeInfoDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *nodeInfoDataSource) Read(
+	ctx context.Context,
+	req datasource.ReadRequest,
+	resp *datasource.ReadResponse,
+) {
 	var data nodeInfoDataSourceModel
 
 	// Read Terraform configuration data into the model
@@ -101,9 +113,12 @@ func (d *nodeInfoDataSource) Read(ctx context.Context, req datasource.ReadReques
 
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	nodeInfo, err := d.client.GetNodeInfo()
+	nodeInfo, err := d.client.GetNodeInfo(ctx)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read nodeinfo data, got error: %s", err))
+		resp.Diagnostics.AddError(
+			"Client Error",
+			fmt.Sprintf("Unable to read nodeinfo data, got error: %s", err),
+		)
 
 		return
 	}

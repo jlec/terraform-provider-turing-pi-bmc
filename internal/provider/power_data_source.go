@@ -19,7 +19,7 @@ var (
 )
 
 // NewPowerDataSource is a helper function to simplify the provider implementation.
-func NewPowerDataSource() datasource.DataSource {
+func NewPowerDataSource() datasource.DataSource { //nolint:ireturn
 	return &powerDataSource{}
 }
 
@@ -37,11 +37,19 @@ type powerDataSourceModel struct {
 	Node4 types.Int64  `tfsdk:"node4"`
 }
 
-func (d *powerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *powerDataSource) Metadata(
+	_ context.Context,
+	req datasource.MetadataRequest,
+	resp *datasource.MetadataResponse,
+) {
 	resp.TypeName = req.ProviderTypeName + "_power"
 }
 
-func (d *powerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *powerDataSource) Schema(
+	_ context.Context,
+	_ datasource.SchemaRequest,
+	resp *datasource.SchemaResponse,
+) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Turing PI Power Data Source",
@@ -73,7 +81,7 @@ func (d *powerDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 
 // FIXME: RO attribute.
 func (d *powerDataSource) Configure(
-	ctx context.Context,
+	_ context.Context,
 	req datasource.ConfigureRequest,
 	resp *datasource.ConfigureResponse,
 ) {
@@ -89,7 +97,11 @@ func (d *powerDataSource) Configure(
 	}
 }
 
-func (d *powerDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *powerDataSource) Read(
+	ctx context.Context,
+	req datasource.ReadRequest,
+	resp *datasource.ReadResponse,
+) {
 	var data powerDataSourceModel
 
 	// Read Terraform configuration data into the model
@@ -101,9 +113,12 @@ func (d *powerDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	power, err := d.client.GetPower()
+	power, err := d.client.GetPower(ctx)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read power data, got error: %s", err))
+		resp.Diagnostics.AddError(
+			"Client Error",
+			fmt.Sprintf("Unable to read power data, got error: %s", err),
+		)
 
 		return
 	}

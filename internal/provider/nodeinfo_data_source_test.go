@@ -12,15 +12,21 @@ data "turing-pi-bmc_nodeinfo" "test" {
 `
 
 func TestAccNodeInfoDataSource(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: GetAccProtoV6ProviderFactories(),
 		Steps: []resource.TestStep{
 			// Read testing
 			{
 				Config: providerConfig + testAccNodeInfoDataSourceConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("data.turing-pi-bmc_nodeinfo.test", "node1", "unknown"),
+					resource.TestCheckResourceAttr(
+						"data.turing-pi-bmc_nodeinfo.test",
+						"node1",
+						"unknown",
+					),
 				),
 			},
 		},
