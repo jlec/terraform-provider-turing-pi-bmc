@@ -30,10 +30,9 @@ jobs:
     name: "Run Linting against all files"
     uses: jlec/github-actions/.github/workflows/reusable-linting.yml@main
     secrets:
-      github-token: ${{ secrets.PAT_GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
   go-build-test:
     name: "GO Build & Test"
-    # trunk-ignore(actionlint/if-cond)
     if: >-
       ${{ github.actor != 'dependabot[bot]' }} &&
       !startsWith(github.event.head_commit.message, 'bump:') &&
@@ -68,7 +67,7 @@ jobs:
       !startsWith(github.event.head_commit.message, 'bump:') &&
       !startsWith(github.event.head_commit.message, 'WIP')
     needs:
-      # - go-build-test
+      - go-build-test
       - dependabot
       - linting
     uses: jlec/github-actions/.github/workflows/reusable-ci-generic.yml@main
@@ -77,7 +76,7 @@ jobs:
       pull-requests: write
     secrets:
       pat: ${{ secrets.PAT_GITHUB_TOKEN }}
-      github-token: ${{ secrets.PAT_GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
 
   ci-release:
     name: "Run Release CI"
