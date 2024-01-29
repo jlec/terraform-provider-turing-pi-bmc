@@ -35,7 +35,7 @@ molecule = ["ansible", "docker", "lint"]
 pytest-testinfra = ["ansible", "docker", "local"]
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.12.1"
+black = "^24.1.1"
 commitizen = "^3.13.0"
 cruft = "^2.15.0"
 poetry = "^1.7.1"
