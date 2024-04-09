@@ -325,7 +325,7 @@ poetry.lock
 ###############################################################################
 .ansible
 .facts_cache
-.task/checksum
+.task/checksum/
 
 common/.ansible
 
@@ -335,8 +335,8 @@ deployment/ssh.sh
 deployment/templates/nomad.rc
 
 dist/
-
-nomad/nomad.rc
+tmp/
+vendor/
 ###############################################################################
 #
 # Custom rules
@@ -344,4 +344,3 @@ nomad/nomad.rc
 ###############################################################################
 terraform-provider-turing-pi-bmc
 examples/**/.terraform.lock.hcl
-vendor

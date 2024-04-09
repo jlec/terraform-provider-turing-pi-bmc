@@ -12,7 +12,7 @@ func (c *Client) GetSDCard(ctx context.Context) (SDCard, error) {
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,
-		fmt.Sprintf("%s?opt=get&type=sdcard", c.APIURI),
+		c.APIURI+"?opt=get&type=sdcard",
 		nil,
 	)
 	if err != nil {
@@ -25,8 +25,8 @@ func (c *Client) GetSDCard(ctx context.Context) (SDCard, error) {
 	}
 
 	sdCardResponse := SDCardResponse{}
-	err = json.Unmarshal(body, &sdCardResponse)
 
+	err = json.Unmarshal(body, &sdCardResponse)
 	if err != nil {
 		return SDCard{}, fmt.Errorf("failed to unmarshal json: %w", err)
 	}

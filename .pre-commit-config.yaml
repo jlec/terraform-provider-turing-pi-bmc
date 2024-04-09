@@ -16,7 +16,7 @@ exclude: >
   )
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -54,13 +54,13 @@ repos:
       - id: sort-simple-yaml
       - id: trailing-whitespace
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.13.0
+    rev: v3.21.3
     hooks:
       - id: commitizen
         stages:
           - commit-msg
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.33.0
+    rev: v1.35.1
     hooks:
       - id: yamllint
   # - repo: https://github.com/jumanjihouse/pre-commit-hooks
@@ -85,11 +85,11 @@ repos:
       # - id: script-must-not-have-extension
       - id: shfmt
   - repo: https://github.com/psf/black
-    rev: 23.12.1
+    rev: 24.3.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.6
+    rev: 1.7.8
     hooks:
       - id: bandit
   - repo: https://github.com/jlec/pre-commit-cruft
@@ -110,30 +110,31 @@ repos:
           - --all
           - --trailing-comma-inline-array
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.18.1
+    rev: v8.18.2
     hooks:
       - id: gitleaks
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.27.3
+    rev: 0.28.1
     hooks:
       - id: check-github-workflows
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.1.9
+    rev: v0.3.5
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
   - repo: https://github.com/gitguardian/ggshield
-    rev: v1.22.0
+    rev: v1.26.0
     hooks:
       - id: ggshield
         stages: ["push"]
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.55.2
+    rev: v1.57.2
     hooks:
-      - id: golangci-lint
+      - id: golangci-lint-full
+        args: ["--timeout", "2m"]
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.12.0
+    rev: v2.13.0
     hooks:
       - id: pretty-format-golang
         args: [--autofix]
@@ -150,7 +151,7 @@ repos:
       # - id: go-ruleguard # requires https://github.com/quasilyte/go-ruleguard
       #   args: [rules/rules.go] # required
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.86.0
+    rev: v1.88.4
     hooks:
       # - id: infracost_breakdown
       # - id: tfupdate
@@ -159,6 +160,7 @@ repos:
         args:
           - --hook-config=--add-to-existing-file=true
       - id: terraform_validate
+        exclude: examples
       - id: terraform_providers_lock
         args:
           - --hook-config=--mode=always-regenerate-lockfile

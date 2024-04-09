@@ -12,7 +12,7 @@ func (c *Client) GetNodeInfo(ctx context.Context) (NodeInfo, error) {
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,
-		fmt.Sprintf("%s?opt=get&type=nodeinfo", c.APIURI),
+		c.APIURI+"?opt=get&type=nodeinfo",
 		nil,
 	)
 	if err != nil {
@@ -25,8 +25,8 @@ func (c *Client) GetNodeInfo(ctx context.Context) (NodeInfo, error) {
 	}
 
 	sdCardResponse := NodeInfoResponse{}
-	err = json.Unmarshal(body, &sdCardResponse)
 
+	err = json.Unmarshal(body, &sdCardResponse)
 	if err != nil {
 		return NodeInfo{}, fmt.Errorf("failed to unmarshal json: %w", err)
 	}

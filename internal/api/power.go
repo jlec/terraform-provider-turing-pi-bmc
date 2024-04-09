@@ -12,7 +12,7 @@ func (c *Client) GetPower(ctx context.Context) (Power, error) {
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,
-		fmt.Sprintf("%s?opt=get&type=power", c.APIURI),
+		c.APIURI+"?opt=get&type=power",
 		nil,
 	)
 	if err != nil {
@@ -25,8 +25,8 @@ func (c *Client) GetPower(ctx context.Context) (Power, error) {
 	}
 
 	sdCardResponse := PowerResponse{}
-	err = json.Unmarshal(body, &sdCardResponse)
 
+	err = json.Unmarshal(body, &sdCardResponse)
 	if err != nil {
 		return Power{}, fmt.Errorf("failed to unmarshal json: %w", err)
 	}

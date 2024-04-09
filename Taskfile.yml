@@ -4,7 +4,6 @@
 version: "3"
 
 env:
-  GO_DOCS_DEPS: github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
   GO_NAME: goer
   GO_RUNNER: go
   GOOS: darwin
@@ -194,20 +193,31 @@ tasks:
   go-vet:
     desc: Vet go code
     cmds:
+      - go mod vendor
       - go vet ./...
 
   go-generate:
     desc: Generate GO docs and stuff
     cmds:
-      - cmd: go get $GO_DOCS_DEPS
-        ignore_error: true
+      - cmd: go mod vendor
       - cmd: go generate ./...
       - cmd: pre-commit run -a end-of-file-fixer
         ignore_error: true
       - cmd: pre-commit run -a trailing-whitespace
         ignore_error: true
+      - cmd: prettier -w docs
       - cmd: pre-commit run -a terraform_docs
         ignore_error: true
+
+  ghost:
+    desc: Run all go stuff
+    cmds:
+      - task: go-update
+      - task: go-mod
+      - task: go-generate
+      - task: go-vet
+      - task: go-fmt
+      - task: go-lint
   #############################################################################
   #
   # Terraform provider
